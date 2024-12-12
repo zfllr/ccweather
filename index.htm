@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .chart-box {
+            width: 45%;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Data Dashboard</h1>
+
+        <div class="chart-container">
+            <div class="chart-box">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="precipitationChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="gduChart"></canvas>
+            </div>
+        </div>
+
+        <h2>Summary Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Average Temperature (&deg;C)</th>
+                    <th>Total Precipitation (mm)</th>
+                    <th>GDU Accumulations</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const temperatureData = [15, 20, 25, 22]; // Example data
+        const precipitationData = [10, 50, 30, 20]; // Example data
+        const gduData = [120, 200, 180, 150]; // Example data
+        const locations = ["Site A", "Site B", "Site C", "Site D"];
+
+        const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+        const ctxPrecip = document.getElementById('precipitationChart').getContext('2d');
+        const ctxGdu = document.getElementById('gduChart').getContext('2d');
+
+        new Chart(ctxTemp, {
+            type: 'line',
+            data: {
+                labels: locations,
+                datasets: [{
+                    label: 'Temperature (&deg;C)',
+                    data: temperatureData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            }
+        });
+
+        new Chart(ctxPrecip, {
+            type: 'bar',
+            data: {
+                labels: locations,
+                datasets: [{
+                    label: 'Precipitation (mm)',
+                    data: precipitationData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        new Chart(ctxGdu, {
+            type: 'line',
+            data: {
+                labels: locations,
+                datasets: [{
+                    label: 'GDU Accumulations',
+                    data: gduData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            }
+        });
+
+        const summaryTableBody = document.getElementById('summaryTableBody');
+        locations.forEach((location, index) => {
+            const row = `<tr>
+                <td>${location}</td>
+                <td>${temperatureData[index]}</td>
+                <td>${precipitationData[index]}</td>
+                <td>${gduData[index]}</td>
+            </tr>`;
+            summaryTableBody.innerHTML += row;
+        });
+    </script>
+</body>
+</html>
