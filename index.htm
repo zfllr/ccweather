@@ -176,6 +176,7 @@
                     }
 
                     const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location.name}/${location.startDate}/${location.endDate}?unitGroup=metric&key=${apiKey}`);
+                    const label = `${location.name} (${location.startDate} to ${location.endDate})`;  
                     if (!response.ok) {
                         throw new Error(`Failed to fetch weather data for ${location.name}.`);
                     }
@@ -193,7 +194,7 @@
                         };
                     });
 
-                    temperatureTimeSeries[location.name] = dailyTemperatures;
+                    temperatureTimeSeries[label] = dailyTemperatures;
 
                     const dailyPrecipitations = data.days.map(day => {
                         allDates.add(day.datetime);
@@ -203,10 +204,10 @@
                         };
                     });
 
-                    precipitationTimeSeries[location.name] = dailyPrecipitations;
+                    precipitationTimeSeries[label] = dailyPrecipitations;
 
                     let cumulativeGDU = 0;
-                    gduData[location.name] = data.days.map(day => {
+                    gduData[label] = data.days.map(day => {
                         allDates.add(day.datetime);
                         let maxTempF = Math.min((day.tempmax * 9/5) + 32, 85);
                         let minTempF = Math.max((day.tempmin * 9/5) + 32, 40);
@@ -219,9 +220,9 @@
                 }
 
                 const sortedDates = Array.from(allDates).sort();
-                updateCharts(locations.map(loc => loc.name), temperatureTimeSeries, precipitationTimeSeries, gduData, sortedDates);
-                updateSummaryTable(locations.map(loc => loc.name), temperatureData, precipitationTimeSeries, gduData);
-                updateGduTable(locations.map(loc => loc.name), gduData);
+                updateCharts(locations.map(loc => `${loc.name} (${loc.startDate} to ${loc.endDate})`), temperatureTimeSeries, precipitationTimeSeries, gduData, sortedDates);
+                updateSummaryTable(locations.map(loc => `${loc.name} (${loc.startDate} to ${loc.endDate})`), temperatureData, precipitationTimeSeries, gduData);
+                updateGduTable(locations.map(loc => `${loc.name} (${loc.startDate} to ${loc.endDate})`), gduData);
             } catch (error) {
                 alert(error.message);
             }
@@ -242,7 +243,7 @@
                     return dayData ? dayData.tempF : null;
                 });
                 return {
-                    label: `Temperature - ${location}`,
+                    label: location,
                     data: alignedTemps,
                     borderColor: `hsl(${index * 120}, 70%, 50%)`,
                     borderWidth: 2
@@ -267,7 +268,7 @@
                     return dayData ? dayData.precipIn : null;
                 });
                 return {
-                    label: `Precipitation - ${location}`,
+                    label: location,
                     data: alignedPrecip,
                     borderColor: `hsl(${index * 120}, 70%, 50%)`,
                     backgroundColor: `hsla(${index * 120}, 70%, 50%, 0.5)`,
@@ -293,7 +294,7 @@
                     return dayData ? dayData.cumulativeGDU : null;
                 });
                 return {
-                    label: `Cumulative GDU - ${location}`,
+                    label: location,
                     data: alignedGDUs,
                     borderColor: `hsl(${index * 120}, 70%, 50%)`,
                     borderWidth: 2
