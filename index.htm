@@ -39,6 +39,10 @@
         .chart-box {
             width: 45%;
             margin-bottom: 30px;
+            text-align: center; /* Center-align chart titles */
+        }
+        .chart-box h3 {
+            margin-bottom: 10px; /* Add spacing below titles */
         }
         table {
             width: 100%;
@@ -112,12 +116,15 @@
 
         <div class="chart-container">
             <div class="chart-box">
+                <h3>Temperature</h3>
                 <canvas id="temperatureChart"></canvas>
             </div>
             <div class="chart-box">
+                <h3>Precipitation</h3>
                 <canvas id="precipitationChart"></canvas>
             </div>
             <div class="chart-box">
+                <h3>Growing Degree Units (GDU)</h3>
                 <canvas id="gduChart"></canvas>
             </div>
         </div>
